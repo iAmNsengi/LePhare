@@ -1,0 +1,70 @@
+{% extends '../base.html'%} {% load static %} {% block content %}
+
+<main id="main">
+  <section class="section container">
+    {% include '../messages.html'%}
+    <div class="d-flex">
+      <h2 class="text-secondary">Dashboard | All Books [{{books.count}}]</h2>
+    </div>
+    <hr />
+    <div>
+      <form class="form-horizontal">
+        <div class="row d-flex">
+          <div class="col-10">
+            <input
+              type="text"
+              name="q"
+              placeholder="Search by author or book name...................."
+              class="form-control"
+            />
+          </div>
+          <div class="col-1">
+            <button class="btn btn-success p-0 m-0">
+              <i class="fa fa-search"></i>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="mt-3">
+      <table class="table searchable sortable col-sm-6">
+        <thead class="thead-dark text-center">
+          <tr>
+            <th scope="col">No.</th>
+            <th scope="col">BOOK ID</th>
+            <th scope="col" aria-sort="descending">TITLE</th>
+            <th scope="col">AUTHOR</th>
+            <th scope="col">CATEGORY</th>
+            <th scope="col">LANGUAGE</th>
+            <th scope="col">PRICE</th>
+            <th scope="col">OPTIONS</th>
+          </tr>
+        </thead>
+        <tbody class="text-center">
+          {% for book in books %}
+          <tr>
+            <th scope="row">{{forloop.counter}}</th>
+            <th scope="row">{{book.book_id}}</th>
+
+            <td>{{book.title}}</td>
+            <td>{{book.author}}</td>
+            <td>{{book.category}}</td>
+            <td>{{book.language}}</td>
+            <td>{{book.price}}</td>
+            <td>
+              <button class="btn btn-info btn-sm">
+                <i class="fa fa-edit"></i>
+              </button>
+              <button class="btn btn-danger btn-sm">
+                <i class="fa fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+{% endblock%}

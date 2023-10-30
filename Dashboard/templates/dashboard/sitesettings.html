@@ -1,0 +1,222 @@
+{% extends './base.html'%} {% load static%} {% block content%}{% load humanize%}
+{% include './modals.html'%}
+<main id="main" class="main">
+  <div class="pagetitle">
+    <h1>Dashboard</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+        <li class="breadcrumb-item active">Site Settings</li>
+      </ol>
+    </nav>
+  </div>
+  <!-- End Page Title -->
+            {% include 'messages.html'%}
+
+  <section class="section dashboard">
+    <div class="row">
+      <!-- Left side columns -->
+     <div class="col-xl-8"  id="siteSettings">
+          <div class="card p-4">
+            <form method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <h2>Site Settings</h2>
+              <div class="row gy-4">
+
+                <div class="col-md-6">
+                  <label for="Site Logo">Site Logo</label>
+                  <input type="file" name="logo" class="form-control" >
+                </div>
+                 <div class="col-md-4">
+                  <img src="{{settings.site_logo.url}}" width="120" height="120">
+                </div>
+
+                <div class="col-md-12 ">
+                  <label for="">Welcome Text</label>
+                  <textarea type="text" class="form-control" name="welcome_text" placeholder="{{settings.welcome_text}}" rows="5" >{{settings.welcome_text}}</textarea>
+                </div>
+
+                <div class="col-md-12">
+                  <label >Address</label>
+                  <input type="text" class="form-control" name="address" placeholder="{{settings.address}}" >
+                </div>
+
+                <div class="col-md-12">
+                  <label >Email</label>
+                  <input type="text" class="form-control" name="email" placeholder="{{settings.email}}" >
+                </div>
+
+                <div class="col-md-12">
+                  <label >Phone</label>
+                  <input type="text" class="form-control" name="phone" placeholder="{{settings.phone}}" >
+                </div>
+
+                <div class="col-md-12">
+                  <label >Footer Text</label>
+                  <textarea class="form-control" name="footer_text" rows="5" placeholder="{{settings.footer_text}}" >{{settings.footer_text}}</textarea>
+                </div>
+
+                <div class="col-md-12 text-center">
+                  <button class="btn btn-success"  type="submit">Update</button>
+                </div>
+
+              </div>
+
+            </form>
+          </div>
+      <!-- End Right side columns -->
+    </div>
+     <div class="col-xl-8"  id="ourPartners">
+     
+      
+          <div class="card p-4">
+             <div class="d-flex mb-3">
+<button
+      class="btn btn-info"
+      data-toggle="modal"
+      data-target="#addPartnerModal"
+    >
+      <i class="bi bi-plus-circle-fill"></i> Add A Partner
+    </button>
+      </div>
+             <h2>Our Partners</h2> <hr>
+              
+               <table class="table table-borderless datatable">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Partner Name</th>
+                      <th scope="col">Facebook Page</th>
+                      <th scope="col">Website</th>
+                      <th scope="col">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for partner in partners %}
+                    <tr>
+                      <th scope="row"><a href="#">#{{forloop.counter}}</a></th>
+                      <td>{{partner.name}}</td>
+                      <td>
+                        <a href="#" class="text-primary">{{partner.facebook_page}} </a>
+                      </td>
+                      <td>{{partner.website}}</td>
+                      <td>
+                       <button class="btn btn-danger" data-toggle="modal"
+        data-target="#deletePartnerModal"><i class="bi bi-trash"></i></button>
+
+                      </td>
+                    </tr>
+
+                    <div
+  class="modal fade"
+  id="deletePartnerModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+
+
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">LaPhare | Delete Partner</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h5 class="text-center">Are You Sure You Want To Delete Partner !?:</h5>
+        <br />
+        
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+            <a href="/dashboard/settings/delete-partner/{{partner.id}}" type="submit" class="btn btn-danger">Delete</a>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+                    {% endfor %}
+                  </tbody>
+                </table>
+            
+          </div>
+      <!-- End Right side columns -->
+    </div>
+  </section>
+</main>
+
+
+
+<!----------------------------------- modals -------------------------- -->
+ <div
+  class="modal fade"
+  id="addPartnerModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="adPLabel">Le Phare | Add Partner</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/dashboard/settings/add-partner/" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="row gy-4">
+
+                <div class="col-md-6">
+                  <label for="Site Logo">Partner Logo</label>
+                  <input type="file" name="logo" class="form-control" required >
+                </div>
+
+                <div class="col-md-12 ">
+                  <label for="">Partner Name:</label>
+                  <input type="text" class="form-control" name="name" placeholder="Enter Name..." rows="5" required>
+                </div>
+
+                <div class="col-md-12">
+                  <label >Facebook Page</label>
+                  <input type="text" class="form-control" name="address" placeholder="Enter Facebook Page ..." >
+                </div>
+
+                <div class="col-md-12">
+                  <label >website</label>
+                  <input type="text" class="form-control" name="email" placeholder="Enter Website..." >
+                </div>
+
+                <div class="col-md-12 text-center">
+                  <button class="btn btn-success"  type="submit"><i class="bi bi-plus-circle"></i> Add Partner</button>
+                </div>
+
+              </div>
+
+            </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

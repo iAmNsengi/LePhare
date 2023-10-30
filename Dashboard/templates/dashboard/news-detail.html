@@ -1,0 +1,123 @@
+{% extends './base.html'%} {% load static%} {% block content%}{% load humanize%}
+<main id="main" class="main">
+  <div class="pagetitle">
+    <h1>Dashboard</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/dashboard/news/">News And Events</a></li>
+        <li class="breadcrumb-item active">{{news.slug}}</li>
+      </ol>
+    </nav>
+  </div>
+  <!-- End Page Title -->
+
+  <section class="section dashboard">
+    <div class="row">
+      <!-- Left side columns -->
+      <div class="col-lg-8">
+        {% include 'messages.html'%}
+        <div class="min-h-screen flex justify-center items-center bg-gray-100">
+          <div class="grid grid-cols-3 gap-4">
+            <!-- Card  -->
+
+            <div class="max-w-md rounded shadow-lg">
+              <div class="p-3">
+                <div>
+                  <h4 class="p-2 text-lg font-bold leading-tight">
+                    {{news.title}}
+                  </h4>
+                  <hr />
+                </div>
+                <div class="flex items-center mb-2 container">
+                  <img
+                    src="{{news.image.url}}"
+                    class="rounded-full h-10 w-10 mr-3"
+                    width="500"
+                    height=""
+                  />
+                </div>
+                <p class="mb-4 text-gray-700">{{news.content | safe}}</p>
+
+                <div
+                  class="flex justify-between items-center text-xs text-gray-500"
+                >
+                  <div>
+                    <span class="px-2 py-1 bg-blue-500 text-white rounded-full"
+                      >Tech</span
+                    >
+                    <span
+                      class="px-2 py-1 bg-blue-500 text-white rounded-full ml-2"
+                      >Tips</span
+                    >
+                  </div>
+                  <div class="flex items-center">
+                    <button class="btn btn-danger"  data-toggle="modal"
+        data-target="#deleteModal">Delete Post</button>
+                   
+                  </div>
+                </div>
+                
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- End News & Updates -->
+      </div>
+      <!-- End Left side columns -->
+
+      
+        
+    </div>
+  </section>
+</main>
+<!-- End #main -->
+
+
+
+<!-- delete news modal -->
+<div
+  class="modal fade"
+  id="deleteModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Le Phare | Delete News/Event</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h5 class="text-center">Are You Sure You Want To Delete The Post!?:</h5>
+        <br />
+        
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+            <a href="/dashboard/news/{{news.slug}}/delete" class="btn btn-danger">Delete</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

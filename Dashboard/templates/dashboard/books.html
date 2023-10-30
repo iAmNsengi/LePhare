@@ -1,0 +1,478 @@
+{% extends './base.html'%} {% load static%} {% block content%}{% load humanize%}
+<main id="main" class="main">
+  <div class="pagetitle">
+    <h1>Dashboard</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active">Books</li>
+      </ol>
+    </nav>
+  </div>
+  <!-- End Page Title -->
+  {% include 'messages.html'%}
+
+  <div class="d-flex mb-3">
+    <button
+      class="btn btn-info"
+      data-toggle="modal"
+      data-target="#addBookModal"
+    >
+      <i class="bi bi-plus-circle-fill"></i> Add A Book
+    </button>
+    &nbsp;&nbsp;
+    <button
+      class="btn btn-warning mr-2"
+      data-toggle="modal"
+      data-target="#uploadFileModal"
+    >
+      <i class="bi bi-upload"></i> Upload Book(s)
+    </button>
+    <button
+      class="btn btn-success mr-2"
+      data-toggle="modal"
+      data-target="#addCategoryModal"
+    >
+      <i class="bi bi-plus-circle-fill"></i> Add Book Category
+    </button>
+  </div>
+  <section class="section dashboard">
+    <div class="row">
+      <!-- Left side columns -->
+      <div class="col-12">
+        <div class="row">
+          <!-- Recent Sales -->
+          <div class="col-12">
+            <div class="card recent-sales overflow-auto">
+              <div class="card-body">
+                <h5 class="card-title">
+                  Books [{{books.count}}] <span>| All</span>
+                </h5>
+                <table class="table table-borderless datatable">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Title</th>
+                      <th scope="col">Author</th>
+                      <th scope="col">Language</th>
+                      <th scope="col">Category</th>
+                      <th scope="col">Price (Frw)</th>
+                      <th scope="col">Publication Year</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Action</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+          {% for book in books %}
+                    <tr>
+                      <th scope="row"><a href="#">#{{book.book_id}}</a></th>
+                      <td>
+                        <a href="#" class="text-primary"
+                          >{{book.title}}
+                        </a>
+                      </td>
+                      
+                      <td>{{book.author}}</td>
+                      <td>{{book.language}}</td>
+                      <td>{{book.category}}</td>
+                      <td>{{book.price}}</td>
+                      <td>{{book.publisher}}</td>
+                      {% if book.status is 0%}
+                      <td>
+                        <span class="badge badge-success">AVAILABLE</span>
+                      </td>
+                      {% elif book.status is 1 %}
+                       <td>
+                        <span class="badge badge-danger">LENT</span>
+                      </td>
+                      {%endif%}
+                      <td>
+                        <button class="btn btn-info m-0 p-0" data-toggle="modal" data-target="#editBookModal{{book.id}}">
+                          <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <button class="btn btn-danger m-0 p-0" data-toggle="modal" data-target="#deleteBookModal{{book.id}}">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+
+                  <!-- delete book modal -->
+                  <div
+                    class="modal fade"
+                    id="deleteBookModal{{book.id}}"
+                    tabindex="-1"
+                    role="dialog"
+                    aria-labelledby="exampleModalLabel"
+                    aria-hidden="true"
+                  >
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Le Phare | Delete Book</h5>
+                          <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                          >
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <h5 class="text-center">Are You Sure You Want To Delete Book {{book.id}} !?:</h5>
+                          <br />
+                          
+                            <div class="modal-footer">
+                              <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-dismiss="modal"
+                              >
+                                Close
+                              </button>
+                              <a href="/dashboard/books/{{book.id}}/delete" class="btn btn-danger">Delete</a>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                      <!-- Modal edit book  -->
+                      <div
+                        class="modal fade"
+                        id="editBookModal{{book.id}}"
+                        tabindex="-1"
+                        role="dialog"
+                        aria-labelledby="exampleModalLabel"
+                        aria-hidden="true"
+                      >
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel">LaPhare | Edit Book</h5>
+                              <button
+                                type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-label="Close"
+                              >
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <form method="post" action="/dashboard/books/{{book.id}}/edit">
+                                {%csrf_token%}
+                                <div class="form-outline">
+                                  <label>Book Id:</label>
+                                  <input
+                                    type="text"
+                                    placeholder="{{book.book_id}}"
+                                    class="form-control"
+                                    name="book_id"
+                                  />
+                                </div>
+                                <div class="form-outline">
+                                  <label>Title:</label>
+                                  <input
+                                    type="text"
+                                    placeholder="{{book.title}}"
+                                    class="form-control"
+                                    name="title"
+                                  />
+                                </div>
+                                <div class="form-outline">
+                                  <label>Author:</label>
+                                  <input
+                                    type="text"
+                                    placeholder="{{book.author}}"
+                                    class="form-control"
+                                    name="author"
+                                  />
+                                </div>
+                                <div class="form-outline">
+                                  <label>Language:</label>
+                                  <input
+                                    type="text"
+                                    placeholder="{{book.language}}"
+                                    class="form-control"
+                                    name="language"
+                                  />
+                                </div>
+                                <div class="form-outline">
+                                  <label>Category:</label>
+                      <select name="category" class="form-control">
+                        <option value="{{book.category.id}}">{{book.category}}</option>
+                        {% for category in categories %}
+                        <option value="{{category.id}}">{{category}}</option>
+                        {% endfor %}
+
+                      </select>
+                                  
+                                </div>
+                                <div class="form-outline">
+                                  <label>Price:</label>
+
+                                  <input
+                                    type="text"
+                                    placeholder="{{book.price}}"
+                                    class="form-control"
+                                    name="address"
+                                  />
+                                </div>
+                                <div class="form-outline">
+                                  <label>Publication Year:</label>
+
+                                  <input
+                                    type="text"
+                                    placeholder="{{book.publisher}}"
+                                    class="form-control"
+                                    name="publisher"
+                                  />
+                                </div>
+                              
+                                <div class="modal-footer">
+                                  <button
+                                    type="button"
+                                    class="btn btn-secondary"
+                                    data-dismiss="modal"
+                                  >
+                                    Close
+                                  </button>
+                                  <button type="submit" class="btn btn-success">Save Changes</button>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+        {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <!-- End Recent Sales -->
+        </div>
+      </div>
+      <!-- End Left side columns -->
+    </div>
+  </section>
+</main>
+<!-- End #main -->
+
+<!-- Modal add user  -->
+<div
+  class="modal fade"
+  id="addBookModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">LaPhare | Register A Book</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post">
+          {%csrf_token%}
+          
+          <div class="form-outline">
+            <input
+              type="text"
+              placeholder="Book Id...."
+              class="form-control"
+              name="book_id"
+              required
+            />
+          </div>
+          <br>
+          <div class="form-outline">
+            <input
+              type="text"
+              placeholder="Book Title...."
+              class="form-control"
+              name="title"
+              required
+            />
+          </div>
+          <br />
+          <div class="form-outline">
+            <input
+              type="text"
+              placeholder="Author..."
+              class="form-control"
+              name="author"
+            />
+          </div>
+          <br />
+          <div class="form-outline">
+            <input
+              type="text"
+              placeholder="Language...."
+              class="form-control"
+              name="language" required
+            />
+          </div>
+          <br />
+          <div class="form-outline">
+            <label for="category">Category: </label> &nbsp;
+            <select name="category" required>
+              <option value="">Select Category</option>
+              {% for category in categories %}
+              <option value="{{category.id}}">{{category.name}}</option>
+              {% endfor %}
+            </select>
+          </div> <br>
+          <div class="form-outline">
+            <input
+              type="text"
+              placeholder="Price...."
+              class="form-control"
+              name="price"
+            />
+          </div>
+          <br />
+          <div class="form-outline">
+            <input
+              type="text"
+              placeholder="Publication Year...."
+              class="form-control"
+              name="publisher"
+            />
+          </div>
+          
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="submit" class="btn btn-primary">Add Book</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal upload bookinfo file  -->
+<div
+  class="modal fade"
+  id="uploadFileModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">LaPhare | Upload Book Info File</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="/dashboard/books/upload" enctype="multipart/form-data">
+          {%csrf_token%}
+          
+          <div class="form-outline">
+            <label for="file">Enter the Excel File Sheet</label>
+            <input
+              type="file"
+              class="form-control"
+              name="file_sheet"
+              required
+            />
+          </div>
+         
+          
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="submit" class="btn btn-primary"><i class="bi bi-upload"></i> Upload</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal add book category file  -->
+<div
+  class="modal fade"
+  id="addCategoryModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">LaPhare | Add Book Category</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="/dashboard/books/add-category">
+          {%csrf_token%}
+          
+          <div class="form-outline">
+            <label for="file">Category Name:</label>
+            <input
+              type="text"
+              class="form-control"
+              name="name"
+              required
+            />
+          </div>
+         
+          
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="submit" class="btn btn-primary"><i class="bi bi-upload"></i> Add Category</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends 'base.html'%} {% load static %} {% block content %}
+
+<main id="main">
+  <section class="hero-section inner-page">
+    <div class="wave">
+      <svg
+        width="1920px"
+        height="265px"
+        viewBox="0 0 1920 265"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+      >
+        <g
+          id="Page-1"
+          stroke="none"
+          stroke-width="1"
+          fill="none"
+          fill-rule="evenodd"
+        >
+          <g
+            id="Apple-TV"
+            transform="translate(0.000000, -402.000000)"
+            fill="#FFFFFF"
+          >
+            <path
+              d="M0,439.134243 C175.04074,464.89273 327.944386,477.771974 458.710937,477.771974 C654.860765,477.771974 870.645295,442.632362 1205.9828,410.192501 C1429.54114,388.565926 1667.54687,411.092417 1920,477.771974 L1920,667 L1017.15166,667 L0,667 L0,439.134243 Z"
+              id="Path"
+            ></path>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-12">
+          <div class="row justify-content-center">
+            <div class="col-md-7 text-center hero-text">
+              <h1 data-aos="fade-up" data-aos-delay="">{{news.title}} </h1>
+             
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <!-- Gallery -->
+    <div class="container">
+      <div class="row">
+         <div class="min-h-screen flex justify-center items-center bg-gray-100">
+
+          <div class="grid grid-cols-3 gap-4">
+            <!-- Card  -->
+            <div class="max-w-md rounded shadow-lg">
+              <div class="p-3">
+                <div>
+                  <h4 class="p-2 text-lg font-bold leading-tight">
+                    {{news.title}}
+                  </h4>
+                  <hr />
+                </div>
+                <div class="flex items-center mb-2 container">
+                  <img
+                    src="{{news.image.url}}"
+                    class="rounded-full h-10 w-10 mr-3"
+                    width="500"
+                    height=""
+                  />
+                </div>
+                <p class="mb-4 text-gray-700">{{news.content | safe }}</p>
+
+                <div
+                  class="flex justify-between items-center text-xs text-gray-500"
+                >
+                </div>
+                
+                </div>
+
+            <a href="/news" class="btn btn-primary m-3">Go Back</a>
+
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Gallery -->
+  </section>
+</main>
+
+{% include 'footer.html'%} {% endblock %}

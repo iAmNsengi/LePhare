@@ -1,0 +1,130 @@
+{% extends './base.html'%} {% load static%} {% block content%}{% load humanize%}
+<main id="main" class="main">
+  <div class="pagetitle">
+    <h1>Dashboard</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active">News And Events</li>
+      </ol>
+    </nav>
+  </div>
+  <!-- End Page Title -->
+  <section class="section dashboard">
+    <div class="row">
+      <!-- Left side columns -->
+      <div class="col-lg-8">
+        {% include 'messages.html'%}
+        <button
+          class="btn btn-info"
+          data-toggle="modal"
+          data-target="#addNewsModal"
+        >
+          <i class="bi bi-plus-circle-fill"></i>&nbsp; Add News
+        </button>
+
+        <hr />
+        <div class="card">
+          <div class="card-body pb-0">
+            <h5 class="card-title">News &amp; Events <span>| All</span></h5>
+            {% for news in news %}
+            <div class="news">
+              <div class="post-item clearfix">
+                <a href="/dashboard/news/{{news.slug}}">
+                  <img src="{{news.image.url}}" alt=""
+                /></a>
+                <h4>
+                  <a href="/dashboard/news/{{news.slug}}">{{news.title}}</a>
+                </h4>
+                <p>{{news.content |safe | truncatechars:30 }}</p>
+                <p class="float-right mt-0">|{{news.created_at}}</p>
+              </div>
+            </div>
+            <hr />
+            {% endfor %}
+            <!-- End sidebar recent posts-->
+          </div>
+        </div>
+        <!-- End News & Updates -->
+      </div>
+      <!-- End Left side columns -->
+      <!-- Right side columns -->
+      <div class="col-lg-4">
+        <!-- Recent Activity -->
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Recent Activity <span>| Latest</span></h5>
+
+            <div class="activity">
+              {% for activity in history %}
+
+              <div class="activity-item d-flex">
+                <div class="activite-label">
+                  {{activity.timestamp | naturalday}}
+                </div>
+                <i
+                  class="bi bi-circle-fill activity-badge text-success align-self-start"
+                ></i>
+                <div class="activity-content">
+                  {{activity.action}} &nbsp;&nbsp;| {{activity.by}}
+                </div>
+              </div>
+              {% endfor %}
+              <!-- End activity item-->
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Right side columns -->
+    </div>
+  </section>
+</main>
+<!-- End #main -->
+
+<div
+  class="modal fade"
+  id="addNewsModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          LaPhare | Add News or Event
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form
+          class="form-horizontal"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          {%csrf_token%}
+          <div class="col-11">
+            <label for="Site Logo">News Title</label>
+            <input type="text" name="title" class="form-control" required />
+          </div>
+          <div class="col-11">
+            <label for="Site Logo">Background Image: *</label>
+            <input type="file" name="image" class="form-control" required />
+          </div>
+          {{form.media}} {{form}}
+          <button class="btn btn-success mt-2" type="submit">Add News</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

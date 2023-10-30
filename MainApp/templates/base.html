@@ -1,0 +1,183 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Le Phare</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!-- Favicons -->
+  <link href="{% static 'logo.jpeg' %}" rel="icon">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+
+  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+
+
+</head>
+
+<body>
+  <header id="header" class="fixed-top d-flex align-items-center bg-primary">
+    <div class="container d-flex justify-content-between align-items-center">
+      <div class="logo">
+        <h1><a href="/"><i class="fa fa-book"></i> <span data-aos="fade-up" data-aos-delay="300" class="text-danger fw-bold">Le&nbsp;</span>Pha<span data-aos="fade-left" data-aos-delay="900" class="text-warning fw-bold">re</span></a></h1>
+      </div>
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li>
+            <a class="active " href="/"><i class="fa fa-home" style="font-size:24px;"></i><span>    &nbsp;Home</a>
+            </li>
+            <li><a class="active " href="/our-books"><i class="fa fa-book" style="font-size:24px;"></i><span>    &nbsp;Books</a></li>
+              <li>
+                <a class="active mr-2 " href="/gallery"><i class="fa fa-picture-o " style="font-size:24px;"></i><span>    &nbsp;Gallery</a>
+                </li>
+                <li>
+                  <a class="active mr-2 " href="/news"><i class="fa fa-briefcase " style="font-size:24px;"></i><span>    &nbsp;News And Events</a>
+                </li>
+          {%if request.user.is_authenticated%}
+         
+
+          <li class="dropdown"><a class="active" href="#"><i class="fa fa-user" style="font-size:24px;"></i><span>&nbsp;{{request.user}}</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li class="col-4">
+            <a href="/dashboard"><i class="fa fa-dashboard" style="font-size:24px;"></i><span>&nbsp;Dashboard</a>
+            </li>
+              <li class="col-4"><a href="/logout" class="btn btn-danger "><i class="fa fa-sign-out">LOGOUT</i> </a></li>
+            </ul>
+          </li>
+          {%else%}
+          <li class="m-2"><a class="active" href="/login"><i class="fa fa-sign-in" style="font-size:24px;"></i><span>&nbsp;Login</a></li>
+
+          <li data-aos="fade-up" data-aos-delay="400" class="ml-1">
+            <button data-toggle="modal"data-target="#helpModal" class="btn btn-primary p-1" style="padding:10px !important; ">
+        <i class="fa fa-help" style="font-size:24px;"></i><span>&nbsp;Help Our Library</button>
+        </li>
+          
+            
+          {% endif %}
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+    </div>
+  </header><!-- End Header -->
+  {% block content %}
+  {{ redirect_to_login_immediately }}
+ 
+  {% endblock%}
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Modal Lend Book -->
+<div
+  class="modal fade"
+  id="helpModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Le Phare | Support Our Community</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h5 class="text-center">Hello, How do you want to support our library!?</h5>
+        <br />
+        <form action="/support" method="post">
+          {%csrf_token%}
+          <div class="form-outline">
+            <label>Your Name</label>
+            <input type="text" name="name" class="form-control">
+          </div>
+          <br>
+          <div class="form-outline">
+            <label>Phone Number</label>
+            <input type="text" name="phone" class="form-control">
+          </div>
+          <br>
+          <div class="form-outline">
+            <label>Please Mention Here: (If Other Please specify)</label>
+            <select name="help_title" class="form-control">
+              <option value="">Please Select</option>
+              <option value="Donation">Donation</option>
+
+              <option value="Volunteer">Volunteer</option>
+              <option value="visit">Visit</option>
+              <option value="Other">Other...</option>
+            </select>
+          </div>
+          <br>  
+           <div class="form-outline">
+            <label>Your Email:</label>
+            <input type="email" name="email" placeholder="Email..." class="form-control">
+          </div>
+          <br>
+          <div class="form-outline">
+            <label>Your Message (Please Specify How you want to help us!):</label>
+            <textarea class="form-control" name="message" cols="20" rows="5" placeholder="Your Message...."></textarea>
+          </div>
+         <div class="form-outline">
+          <br><br><hr>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+        <button type="submit" class="btn btn-primary">Send</button>
+      </div>
+        </form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+</body>
+
+</html>

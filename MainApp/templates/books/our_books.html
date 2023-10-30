@@ -1,0 +1,52 @@
+{% extends '../base.html'%} {% load static %} {% block content %}
+<link
+  href="{% static 'dashboard/assets/vendor/simple-datatables/style.css'%}"
+  rel="stylesheet"
+/>
+<link href="{%static 'dashboard/assets/css/style.css'%}" rel="stylesheet" />
+
+<main id="main">
+  <section class="section container">
+    {% include '../messages.html'%}
+    <div class="d-flex">
+      <h2 class="text-secondary">Dashboard | All Books [{{books.count}}]</h2>
+    </div>
+    <hr />
+
+    <div class="mt-3">
+      <table class="table table-borderless datatable">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Author</th>
+            <th scope="col">Language</th>
+            <th scope="col">Category</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for book in books %}
+          <tr>
+            <th scope="row"><a href="#">#{{forloop.counter}}</a></th>
+            <td>{{book.title}}</td>
+            <td>
+              <a href="#" class="text-primary">{{book.author}} </a>
+            </td>
+            <td>{{book.language}}</td>
+            <td>{{book.category}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+{% include '../footer.html'%}
+<script src="{%static 'dashboard/assets/vendor/tinymce/tinymce.min.js'%}"></script>
+
+<script src="{%static 'dashboard/assets/vendor/simple-datatables/simple-datatables.js'%}"></script>
+
+<script src="{% static 'dashboard/assets/js/main.js'%}"></script>
+
+{% endblock%}
