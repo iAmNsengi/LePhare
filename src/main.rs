@@ -27,12 +27,10 @@ struct TodoRequest {
     description: Option<String>,
 }
 
-// Define our application state
 struct AppState {
     todos: Mutex<HashMap<Uuid, Todo>>,
 }
 
-// Create a new todo
 #[post("/todos")]
 async fn create_todo(state: Data<AppState>, todo_req: Json<TodoRequest>) -> impl Responder {
     let mut todos = state.todos.lock().unwrap();
@@ -52,7 +50,6 @@ async fn create_todo(state: Data<AppState>, todo_req: Json<TodoRequest>) -> impl
     HttpResponse::Created().json(new_todo)
 }
 
-// Get all todos
 #[get("/todos")]
 async fn get_todos(state: Data<AppState>) -> impl Responder {
     let todos = state.todos.lock().unwrap();
@@ -61,7 +58,6 @@ async fn get_todos(state: Data<AppState>) -> impl Responder {
     HttpResponse::Ok().json(todos_vec)
 }
 
-// Get a specific todo by ID
 #[get("/todos/{id}")]
 async fn get_todo(state: Data<AppState>, path: Path<Uuid>) -> impl Responder {
     let todos = state.todos.lock().unwrap();
@@ -73,7 +69,6 @@ async fn get_todo(state: Data<AppState>, path: Path<Uuid>) -> impl Responder {
     }
 }
 
-// Update a todo
 #[put("/todos/{id}")]
 async fn update_todo(
     state: Data<AppState>,
@@ -94,7 +89,6 @@ async fn update_todo(
     }
 }
 
-// Toggle todo completion status
 #[put("/todos/{id}/toggle")]
 async fn toggle_todo(state: Data<AppState>, path: Path<Uuid>) -> impl Responder {
     let mut todos = state.todos.lock().unwrap();
@@ -110,7 +104,6 @@ async fn toggle_todo(state: Data<AppState>, path: Path<Uuid>) -> impl Responder 
     }
 }
 
-// Delete a todo
 #[delete("/todos/{id}")]
 async fn delete_todo(state: Data<AppState>, path: Path<Uuid>) -> impl Responder {
     let mut todos = state.todos.lock().unwrap();
